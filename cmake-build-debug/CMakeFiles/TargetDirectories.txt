@@ -1,0 +1,3 @@
+C:/Users/hugom/Desktop/ft_regex/cmake-build-debug/CMakeFiles/ft_regex.dir
+C:/Users/hugom/Desktop/ft_regex/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/hugom/Desktop/ft_regex/cmake-build-debug/CMakeFiles/rebuild_cache.dir
