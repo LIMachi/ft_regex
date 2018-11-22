@@ -10,6 +10,7 @@
 //TODO obligatory: ^ $ | ( (?: )
 //TODO facultative: (?= (?! (?<= (?<! (?N
 
+/*
 static inline int	extract_string(char *str,
 									char **next,
 									t_regex *holder)
@@ -76,14 +77,16 @@ static inline int	extract_special(char *str,
 			.data = {.string = NULL}};
 	return (extract_special_1(str, next, holder, tmp));
 }
+*/
 
-t_regex_error		ft_regex_compile(char *expression,
-									t_regex *out,
-									t_regex_flags flags)
+t_regex_code		*ft_regex_compile(char *expression,
+									t_regex_flags flags,
+									t_regex_error *error)
 {
-	size_t			i;
-	t_regex_error	error;
+	//size_t			i;
+	//t_regex_error	error;
 
+	/*
 	if (expression == NULL || out == NULL)
 		return (re_invalid_param);
 	if (out->code_length == 0)
@@ -107,5 +110,9 @@ t_regex_error		ft_regex_compile(char *expression,
 		}
 	if (out->code[out->code_length].type != re_undefined)
 		++out->code_length;
-	return (re_ok);
+	*/
+
+	if (error != NULL)
+		*error = re_ok;
+	return (group(expression, NULL, error, NULL));
 }

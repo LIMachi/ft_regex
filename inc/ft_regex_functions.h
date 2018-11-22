@@ -6,8 +6,8 @@
 # define FT_REGEX_FUNCTIONS_H
 
 t_regex_string				*string(char *src,
-									  char **next,
-									  int *error);
+									char **next,
+									t_regex_error *error);
 
 /*
 ** prepare next and error so they can be facultative
@@ -41,16 +41,16 @@ int __attribute__((always_inline)) inline valid_param(char **src,
 */
 
 t_regex_quantifier			quantifier(char *src,
-										 char **next,
-										 int *error);
+										char **next,
+										t_regex_error *error);
 
 /*
 ** extract a set from a string of formats:
 */
 
 t_regex_set					set(char *src,
-								   char **next,
-								   int *error);
+								char **next,
+								t_regex_error *error);
 
 /*
 ** extract an unescaped character from an escape sequence of the form:
@@ -62,7 +62,7 @@ t_regex_set					set(char *src,
 int							unescape(char *src,
 										int in_set,
 										char **next,
-										int *error);
+										t_regex_error *error);
 
 /*
 ** central function, extracts groups/references/choices and call all other
@@ -71,8 +71,8 @@ int							unescape(char *src,
 */
 
 t_regex_code				*group(char *src,
-								   char **next,
-								   int *error,
-								   t_regex_code *parent);
+									char **next,
+									t_regex_error *error,
+									t_regex_code *parent);
 
 #endif

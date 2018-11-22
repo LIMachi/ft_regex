@@ -44,4 +44,6 @@ CMakeFiles/ft_regex.dir/src/unescape.c.o
  /root/Desktop/ft_regex/src/unescape.c
  /root/Desktop/ft_regex/src/valid_param.c
 CMakeFiles/ft_regex.dir/src/valid_param.c.o
+ /root/Desktop/ft_regex/inc/ft_regex_defines.h
+ /root/Desktop/ft_regex/inc/ft_regex_types.h
  /root/Desktop/ft_regex/src/valid_param.c

@@ -13,56 +13,115 @@
 #include <stdio.h>
 #include <ctype.h>
 
-void	ft_regex_debug_data(t_regex_code code)
+void	ft_regex_debug_set(t_regex_set set, int depth, const char *big_space)
 {
 	size_t	i;
 	int		b;
 
-	switch (code.type)
-	{
-		case re_string: printf("\"%s\"\n", code.data.string->ptr); break;
-		case re_set:
-			printf("0x%016lX%016lX = ", (uint64_t)(code.data.set >> 64), (uint64_t)(code.data.set & 0xFFFFFFFFFFFFFFFF));
-			i = -1;
-			b = 0;
-			printf("[");
-			while (++i < 128)
-				if (code.data.set & (((__uint128_t)1) << i))
-				{
-					if (b)
-						printf(", ");
-					if (!iscntrl(i))
-						printf("'%c'", (int)i);
-					else
-						printf("'\\x%02X'", (unsigned int)i);
-					b = 1;
-				}
-			printf("]\n");
-		break;
-		case re_group:
+	printf("%.*s0x%016lX%016lX = ", depth * 2, big_space,
+		(uint64_t)(set >> 64), (uint64_t)(set & -1ull));
+	i = -1;
+	b = 0;
+	printf("[");
+	while (++i < 128)
+		if (set & (((__uint128_t)1) << i))
+		{
+			if (b)
+				printf(", ");
+			if (!iscntrl(i))
+				printf("'%c'", (int)i);
+			else
+				printf("'\\x%02X'", (unsigned int)i);
+			b = 1;
+		}
+	printf("]\n");
+}
 
-		break;
-		default:;
+void	rec_count(t_regex_code *regex, size_t *min, size_t *max, size_t *total)
+{
+	size_t	i;
+	size_t	lmin;
+	size_t	lmax;
+
+	if (regex == NULL || regex->type == re_undefined)
+		return ;
+	++*total;
+	rec_count(regex->next, min, max, total);
+	if (regex->type != re_group)
+		return ;
+	i = -1;
+	lmin = -1;
+	lmax = 0;
+	while (++i < regex->data.group.nb_branches)
+	{
+		rec_count(regex->data.group.branches[i].code,
+				&regex->data.group.branches[i].min_len,
+				&regex->data.group.branches[i].max_len, total);
+		if (regex->data.group.branches[i].min_len > lmin)
+			lmin = regex->data.group.branches[i].min_len;
+		if (regex->data.group.branches[i].max_len < lmax)
+			lmax = regex->data.group.branches[i].max_len;
+	}
+	*min += lmin;
+	*max += lmax;
+}
+
+void	rec_print(t_regex_code *regex, int depth, const char *big_space)
+{
+	size_t			i;
+	t_regex_group	*group;
+	const char		*type_names[4] = {"undefined (ERROR)", "string", "set",
+									"group"};
+
+	if (regex == NULL)
+		return ;
+	printf("%1$.*2$stype: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$.*2"
+		"$sparent: %6$p\n%1$.*2$squantifier: [%7$zu, %8$zu, %9$sgreedy]\n",
+		big_space, depth * 2, type_names[regex->type], regex->prev,
+		regex->next, regex->parent, regex->quantifier.min,
+		regex->quantifier.max, regex->quantifier.non_greedy ? "non " : "");
+	if (regex->type == re_string)
+		printf("%1$.*2$slength: %3$d\n%1$.*2$s'%4$.*3$s'\n", big_space,
+			depth * 2, (int)regex->data.string->len, regex->data.string->ptr);
+	else if (regex->type == re_set)
+		ft_regex_debug_set(regex->data.set, depth, big_space);
+	else if (regex->type == re_group)
+	{
+		group = &regex->data.group;
+		printf("%1$.*2$sindex: %3$d\n%1$.*2$slabel: '%4$s'\n%1$.*2$sflags: 0x%"
+			"5$X\n%1$.*2$snb_branches: %6$zu\n", big_space, depth * 2,
+			group->index, group->label != NULL ? group->label->ptr : "(nil)",
+			group->flags, group->nb_branches);
+		i = -1;
+		++depth;
+		while (++i < group->nb_branches)
+		{
+			printf("%1$.*2$smin_len: %3$zu\n%1$.*2$smax_len: %4$zu\n", big_space,
+				depth * 2, group->branches[i].min_len, group->branches[i].max_len);
+			rec_print(group->branches[i].code, depth, big_space);
+		}
 	}
 }
 
-int	ft_regex_debug(t_regex *regex)
+int	ft_regex_debug(t_regex_code *regex)
 {
-	size_t			i;
-	t_regex_code	code;
-	char			*type_names[6] = {"undefined (ERROR)", "string", "set", "or", "group", "reference"};
+	size_t			total;
+	size_t			min;
+	size_t			max;
+	const char		big_space[] = "                                           "
 
-	printf("code length: %zu\n", regex->code_length);
-	i = -1;
-	while (++i < regex->code_length)
+	"                                                                         "
+	"                                                                         "
+	"                                                                         "
+	"                                                                        ";
+	if (regex->type == re_group && regex->data.group.flags & re_main_group)
 	{
-		code = regex->code[i];
-		printf("type: %s\n", type_names[code.type]);
-		printf("next: %p\n", code.next);
-		printf("parent: %p\n", code.parent);
-		printf("quantifier: [%zu, %zu, %sgreedy]\n", code.quantifier.min, code.quantifier.max, code.quantifier.non_greedy ? "non " : "");
-		printf("data: %p\n", code.data.string);
-		ft_regex_debug_data(code);
+		total = 0;
+		min = 0;
+		max = 0;
+		rec_count(regex, &min, &max, &total);
+		printf("code length: %zu - %zu (wcs: %zu)\n", min, max, total);
 	}
+	rec_print(regex, 0, big_space);
 	return (0);
 }

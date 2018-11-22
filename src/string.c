@@ -12,7 +12,7 @@
 
 static inline t_regex_string	*string_second_pass(char *src,
 													char **next,
-													int *error,
+													t_regex_error *error,
 													size_t tmp_size)
 {
 	t_regex_string	*out;
@@ -43,7 +43,7 @@ static inline t_regex_string	*string_second_pass(char *src,
 
 t_regex_string					*string(char *src,
 										char **next,
-										int *error)
+										t_regex_error *error)
 {
 	char 			*ptr;
 	size_t			tmp_size;

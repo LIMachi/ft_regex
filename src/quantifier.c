@@ -24,7 +24,9 @@
 
 #include <ctype.h> //isspace
 
-static inline t_regex_quantifier	quantifier_extended(char *src, char **next, int *error)
+static inline t_regex_quantifier	quantifier_extended(char *src,
+														char **next,
+														t_regex_error *error)
 {
 	char				*tmp_ptr;
 	size_t				tmp_val;
@@ -51,7 +53,9 @@ static inline t_regex_quantifier	quantifier_extended(char *src, char **next, int
 	return (out);
 }
 
-t_regex_quantifier					quantifier(char *src, char **next, int *error)
+t_regex_quantifier					quantifier(char *src,
+												char **next,
+												t_regex_error *error)
 {
 	t_regex_quantifier	out;
 

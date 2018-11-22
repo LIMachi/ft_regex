@@ -33,7 +33,7 @@
 
 static inline t_regex_set	set_interval(char **ptr,
 										char **next,
-										int *error,
+										t_regex_error *error,
 										size_t *start)
 {
 	size_t				end;
@@ -65,7 +65,7 @@ static inline t_regex_set	set_interval(char **ptr,
 
 static inline t_regex_set	set_internal(char *src,
 										char **next,
-										int *error)
+										t_regex_error *error)
 {
 	char 				*ptr;
 	size_t				start;
@@ -96,7 +96,7 @@ static inline t_regex_set	set_internal(char *src,
 
 t_regex_set					set(char *src,
 								char **next,
-								int *error)
+								t_regex_error *error)
 {
 	if (valid_param(&src, &next, &error))
 		return (0);

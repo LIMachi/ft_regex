@@ -12,7 +12,7 @@
 #include "../inc/ft_regex_types.h"
 #include "../inc/ft_regex_functions.h"
 
-//DEBUG: quick implementation of reallocf
+//DEBUG: quick implementation of reallocf, do not count toward the 5 functions limit per file
 void	*reallocf(void *ptr, size_t size)
 {
 	void	*out;
@@ -25,7 +25,7 @@ void	*reallocf(void *ptr, size_t size)
 
 static inline t_regex_flags	group_extract_flags(char *src,
 												char **next,
-												int *error)
+												t_regex_error *error)
 {
 	*next = src;
 	*error = re_ok;
@@ -52,9 +52,72 @@ static inline t_regex_flags	group_extract_flags(char *src,
 	return (re_normal);
 }
 
+static inline t_regex_error	extract_special_escape(char *src,
+													char **next,
+													t_regex_error *error,
+													t_regex_code *out)
+{
+	t_regex_branch	*branch;
+	t_regex_code	*tmp;
+	int				c;
+
+	if (*error != re_ok)
+		return (*error);
+	branch = &out->data.group.branches[out->data.group.nb_branches - 1];
+	if ((tmp = malloc(sizeof(t_regex_code))) == NULL)
+		return (*error = re_out_of_memory);
+	c = unescape(src, 0, next, error);
+	if (*error != re_ok)
+		return (*error);
+	*tmp = (t_regex_code){.type = re_set, .next = NULL, .prev = branch->last,
+		.parent = out, .quantifier = {1, 1, 0}, .data.set = SET_SPE[-c - 1]};
+	if (branch->code == NULL)
+	{
+		branch->code = tmp;
+		branch->last = tmp;
+	}
+	else
+	{
+		branch->last->next = tmp;
+		branch->last = tmp;
+	}
+	return (*error);
+}
+
+static inline t_regex_error	extract_string(char *src,
+											char **next,
+											t_regex_error *error,
+											t_regex_code *out)
+{
+	t_regex_branch	*branch;
+	t_regex_code	*tmp;
+	int				c;
+
+	if (*error != re_ok)
+		return (*error);
+	branch = &out->data.group.branches[out->data.group.nb_branches - 1];
+	if ((tmp = malloc(sizeof(t_regex_code))) == NULL)
+		return (*error = re_out_of_memory);
+	*tmp = (t_regex_code){.type = re_string, .next = NULL, .parent = branch->last,
+			.quantifier = {1, 1, 0}, .data = {.string = string(src, next, error)}};
+	if (*error != re_ok)
+		return (*error);
+	if (branch->code == NULL)
+	{
+		branch->code = tmp;
+		branch->last = tmp;
+	}
+	else
+	{
+		branch->last->next = tmp;
+		branch->last = tmp;
+	}
+	return (*error);
+}
+
 static t_regex_code			*group_rec(char *src,
 										char **next,
-										int *error,
+										t_regex_error *error,
 										t_regex_code *out)
 {
 	*next = src;
@@ -73,9 +136,9 @@ static t_regex_code			*group_rec(char *src,
 		else if (strchr(FT_REGEX_ALL_ENDERS, **next) != NULL)
 			*error = re_invalid_character;
 		else if (**next == '\\' && unescape(*next, 0, NULL, error) < 0)
-			NULL; //TODO: extract special escape sequence
+			extract_special_escape(*next, next, error, out);
 		else
-			NULL; //TODO: extract string
+			extract_string(*next, next, error, out);
 	if (**next != ')' && !(out->data.group.flags & re_main_group))
 		*error = re_missing_group_ender;
 	if (**next == ')' && out->data.group.flags & re_main_group)
@@ -85,7 +148,7 @@ static t_regex_code			*group_rec(char *src,
 
 t_regex_code				*group(char *src,
 									char **next,
-									int *error,
+									t_regex_error *error,
 									t_regex_code *parent)
 {
 	t_regex_code	*out;
@@ -110,6 +173,6 @@ t_regex_code				*group(char *src,
 	*out = (t_regex_code){.type = re_group, .prev = NULL, .parent = parent,
 			.quantifier = {1, 1, 0}, .next = NULL, .data = {.group = group}};
 	out->data.group.branches[0] = (t_regex_branch){.min_len = 0, .max_len = 0,
-												.code = NULL};
+												.code = NULL, .last = NULL};
 	return (group_rec(src, next, error, out));
 }

@@ -6,7 +6,9 @@
 #include "../inc/ft_regex_types.h"
 #include "../inc/ft_regex_functions.h"
 
-static inline int	unescape_internal(char *src, char **next, int *error)
+static inline int	unescape_internal(char *src,
+										char **next,
+										t_regex_error *error)
 {
 	static const char	escape[16] = "n\nr\rt\tv\vf\fa\ab\b0\0";
 	char 				*tmp;
@@ -33,7 +35,10 @@ static inline int	unescape_internal(char *src, char **next, int *error)
 	return (*src);
 }
 
-int					unescape(char *src, int in_set, char **next, int *error)
+int					unescape(char *src,
+							int in_set,
+							char **next,
+							t_regex_error *error)
 {
 	static const char	all_spe[23] = "sSdDwW0123456789bB<>AZ";
 	static const char	in_set_spe[7] = "sSdDwW";

@@ -6,17 +6,17 @@
 # include "ft_regex_defines.h"
 # include "ft_regex_types.h"
 
-t_regex_error				ft_regex_compile(char *expression,
-											t_regex *out,
-											t_regex_flags);
+t_regex_code	*ft_regex_compile(char *expression,
+								t_regex_flags flags,
+								t_regex_error *error);
 
-int							ft_regex_find(char *str,
-										t_regex *regex,
-										t_regex_match *matchs,
-										int nb_matchs);
+int				ft_regex_find(char *str,
+							t_regex *regex,
+							t_regex_match *matchs,
+							int nb_matchs);
 
-int							ft_regex_debug(t_regex *regex);
+int				ft_regex_debug(t_regex_code *regex);
 
-int							ft_regex_free(t_regex *regex);
+int				ft_regex_free(t_regex *regex);
 
 #endif

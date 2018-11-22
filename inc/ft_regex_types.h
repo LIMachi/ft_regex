@@ -77,13 +77,13 @@ typedef union				u_regex_set_helper
 
 typedef enum				e_regex_group_flags
 {
-	re_normal = 0,
-	re_reference = 1,
-	re_non_holding = 2,
-	re_look_ahead = 4,
-	re_look_behind = 8,
-	re_negative = 16,
-	re_main_group = 128
+	re_normal = 0x0,
+	re_reference = 0x1,
+	re_non_holding = 0x2,
+	re_look_ahead = 0x4,
+	re_look_behind = 0x8,
+	re_negative = 0x10,
+	re_main_group = 0x20
 }							t_regex_group_flags;
 
 typedef struct				s_regex_branch
@@ -91,6 +91,7 @@ typedef struct				s_regex_branch
 	size_t					min_len;
 	size_t					max_len;
 	t_regex_code			*code;
+	t_regex_code			*last; //compilation only
 }							t_regex_branch;
 
 typedef struct				s_regex_group
