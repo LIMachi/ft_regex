@@ -22,13 +22,13 @@ static inline t_regex_string	*string_second_pass(char *src,
 		return (*error = re_out_of_memory, NULL);
 	ptr = src;
 	out->len = 0;
-	while (*ptr != '\0' && strchr(FT_REGEX_ALL_SPECIAL_CHAR, *ptr) == NULL)
-		if (*ptr == FT_REGEX_ESCAPED_CHAR)
+	while (*src != '\0' && strchr(FT_REGEX_ALL_SPECIAL_CHAR, *src) == NULL)
+		if (*src == FT_REGEX_ESCAPED_CHAR)
 		{
-			if ((out->ptr[out->len] = unescape(ptr, 0, &ptr, error)) < 0)
+			if ((out->ptr[out->len] = unescape(src, 0, &ptr, error)) < 0)
 				break ;
-			else
-				++out->len;
+			++out->len;
+			src = ptr;
 			if (*error != re_ok)
 			{
 				free(out);
@@ -36,9 +36,9 @@ static inline t_regex_string	*string_second_pass(char *src,
 			}
 		}
 		else
-			out->ptr[out->len++] = *ptr++;
+			out->ptr[out->len++] = *src++;
 	out->ptr[out->len] = '\0';
-	return (*next = ptr, out);
+	return (*next = src, out);
 }
 
 t_regex_string					*string(char *src,

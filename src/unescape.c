@@ -40,7 +40,7 @@ int					unescape(char *src,
 							char **next,
 							t_regex_error *error)
 {
-	static const char	all_spe[23] = "sSdDwW0123456789bB<>AZ";
+	static const char	all_spe[11] = "sSdDwWAZbB";
 	static const char	in_set_spe[7] = "sSdDwW";
 	char 				*tmp;
 

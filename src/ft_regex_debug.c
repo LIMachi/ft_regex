@@ -48,7 +48,11 @@ void	rec_count(t_regex_code *regex, size_t *min, size_t *max, size_t *total)
 	++*total;
 	rec_count(regex->next, min, max, total);
 	if (regex->type != re_group)
+	{
+		*min += regex->quantifier.min;
+		*max += regex->quantifier.max;
 		return ;
+	}
 	i = -1;
 	lmin = -1;
 	lmax = 0;
@@ -57,26 +61,26 @@ void	rec_count(t_regex_code *regex, size_t *min, size_t *max, size_t *total)
 		rec_count(regex->data.group.branches[i].code,
 				&regex->data.group.branches[i].min_len,
 				&regex->data.group.branches[i].max_len, total);
-		if (regex->data.group.branches[i].min_len > lmin)
+		if (regex->data.group.branches[i].min_len < lmin)
 			lmin = regex->data.group.branches[i].min_len;
-		if (regex->data.group.branches[i].max_len < lmax)
+		if (regex->data.group.branches[i].max_len > lmax)
 			lmax = regex->data.group.branches[i].max_len;
 	}
-	*min += lmin;
-	*max += lmax;
+	*min += lmin * regex->quantifier.min;
+	*max += lmax * regex->quantifier.max;
 }
 
 void	rec_print(t_regex_code *regex, int depth, const char *big_space)
 {
 	size_t			i;
 	t_regex_group	*group;
-	const char		*type_names[4] = {"undefined (ERROR)", "string", "set",
-									"group"};
+	const char 		*anchor_names[6] = {"start of string", "end of string", "word boundary", "not word boundary", "start of line", "end of line"};
+	const char		*type_names[5] = {"undefined (ERROR)", "string", "set", "group", "anchor"};
 
 	if (regex == NULL)
 		return ;
-	printf("%1$.*2$stype: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$.*2"
-		"$sparent: %6$p\n%1$.*2$squantifier: [%7$zu, %8$zu, %9$sgreedy]\n",
+	printf("\n%1$.*2$stype: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$."
+		"*2$sparent: %6$p\n%1$.*2$squantifier: [%7$zu, %8$zu, %9$sgreedy]\n",
 		big_space, depth * 2, type_names[regex->type], regex->prev,
 		regex->next, regex->parent, regex->quantifier.min,
 		regex->quantifier.max, regex->quantifier.non_greedy ? "non " : "");
@@ -85,6 +89,8 @@ void	rec_print(t_regex_code *regex, int depth, const char *big_space)
 			depth * 2, (int)regex->data.string->len, regex->data.string->ptr);
 	else if (regex->type == re_set)
 		ft_regex_debug_set(regex->data.set, depth, big_space);
+	else if (regex->type == re_anchor)
+		printf("%.*sanchor: %s\n", depth * 2, big_space, anchor_names[regex->data.anchor - 1]);
 	else if (regex->type == re_group)
 	{
 		group = &regex->data.group;
@@ -93,14 +99,15 @@ void	rec_print(t_regex_code *regex, int depth, const char *big_space)
 			group->index, group->label != NULL ? group->label->ptr : "(nil)",
 			group->flags, group->nb_branches);
 		i = -1;
-		++depth;
 		while (++i < group->nb_branches)
 		{
 			printf("%1$.*2$smin_len: %3$zu\n%1$.*2$smax_len: %4$zu\n", big_space,
-				depth * 2, group->branches[i].min_len, group->branches[i].max_len);
-			rec_print(group->branches[i].code, depth, big_space);
+				(depth + 1) * 2, group->branches[i].min_len, group->branches[i].max_len);
+			rec_print(group->branches[i].code, depth + 2, big_space);
 		}
 	}
+	if (regex->next != NULL)
+		rec_print(regex->next, depth, big_space);
 }
 
 int	ft_regex_debug(t_regex_code *regex)

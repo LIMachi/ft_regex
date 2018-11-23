@@ -66,11 +66,15 @@ static inline t_regex_error	extract_special_escape(char *src,
 	branch = &out->data.group.branches[out->data.group.nb_branches - 1];
 	if ((tmp = malloc(sizeof(t_regex_code))) == NULL)
 		return (*error = re_out_of_memory);
-	c = unescape(src, 0, next, error);
+	c = -unescape(src, 0, next, error) - 1;
 	if (*error != re_ok)
 		return (*error);
-	*tmp = (t_regex_code){.type = re_set, .next = NULL, .prev = branch->last,
-		.parent = out, .quantifier = {1, 1, 0}, .data.set = SET_SPE[-c - 1]};
+	if (c < 6)
+		*tmp = (t_regex_code){.type = re_set, .next = NULL, .prev = branch->last,
+			.parent = out, .quantifier = {1, 1, 0}, .data.set = SET_SPE[c]};
+	else
+		*tmp = (t_regex_code){.type = re_anchor, .next = NULL, .prev = branch->last,
+				.parent = out, .quantifier = {1, 1, 0}, .data.anchor = c - 5};
 	if (branch->code == NULL)
 	{
 		branch->code = tmp;
@@ -98,8 +102,9 @@ static inline t_regex_error	extract_string(char *src,
 	branch = &out->data.group.branches[out->data.group.nb_branches - 1];
 	if ((tmp = malloc(sizeof(t_regex_code))) == NULL)
 		return (*error = re_out_of_memory);
-	*tmp = (t_regex_code){.type = re_string, .next = NULL, .parent = branch->last,
-			.quantifier = {1, 1, 0}, .data = {.string = string(src, next, error)}};
+	*tmp = (t_regex_code){.type = re_string, .next = NULL,
+			.prev = branch->last, .parent = out, .quantifier = {1, 1, 0},
+			.data = {.string = string(src, next, error)}};
 	if (*error != re_ok)
 		return (*error);
 	if (branch->code == NULL)
@@ -123,14 +128,15 @@ static t_regex_code			*group_rec(char *src,
 	*next = src;
 	*error = re_ok;
 	while (*error == re_ok && **next != '\0' && **next != ')')
+	{
 		if (strchr(FT_REGEX_CHOICE_SEPARATORS, **next) != NULL)
 			if ((out->data.group.branches = reallocf(
 					out->data.group.branches, sizeof(t_regex_branch)
-					* ++out->data.group.nb_branches)) == NULL)
+											  * ++out->data.group.nb_branches)) == NULL)
 				*error = re_out_of_memory;
 			else
 				out->data.group.branches[out->data.group.nb_branches] =
-					(t_regex_branch){.code = NULL, .max_len = 0, .min_len = 0};
+						(t_regex_branch) {.code = NULL, .max_len = 0, .min_len = 0};
 		else if (strchr(FT_REGEX_ALL_STARTERS, **next) != NULL)
 			NULL; //TODO: extract any special
 		else if (strchr(FT_REGEX_ALL_ENDERS, **next) != NULL)
@@ -139,6 +145,7 @@ static t_regex_code			*group_rec(char *src,
 			extract_special_escape(*next, next, error, out);
 		else
 			extract_string(*next, next, error, out);
+	}
 	if (**next != ')' && !(out->data.group.flags & re_main_group))
 		*error = re_missing_group_ender;
 	if (**next == ')' && out->data.group.flags & re_main_group)

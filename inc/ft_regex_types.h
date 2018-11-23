@@ -29,7 +29,9 @@ typedef enum				e_regex_type
 	re_undefined = 0,
 	re_string,
 	re_set,
-	re_group
+	re_group,
+	re_anchor,
+	re_reference
 }							t_regex_type;
 
 typedef struct				s_regex_string
@@ -78,12 +80,11 @@ typedef union				u_regex_set_helper
 typedef enum				e_regex_group_flags
 {
 	re_normal = 0x0,
-	re_reference = 0x1,
-	re_non_holding = 0x2,
-	re_look_ahead = 0x4,
-	re_look_behind = 0x8,
-	re_negative = 0x10,
-	re_main_group = 0x20
+	re_non_holding = 0x1,
+	re_look_ahead = 0x2,
+	re_look_behind = 0x4,
+	re_negative = 0x8,
+	re_main_group = 0x10
 }							t_regex_group_flags;
 
 typedef struct				s_regex_branch
@@ -103,11 +104,23 @@ typedef struct				s_regex_group
 	t_regex_branch			*branches; //all branches are NULL terminated, the exact length unknown but are ordered at compilation time, the ones with the lowest operations first
 }							t_regex_group;
 
+typedef enum				e_regex_anchor
+{
+	re_start_of_string = 1,
+	re_end_of_string = 2,
+	re_word_boundary = 3,
+	re_not_word_boudary = 4,
+	re_start_of_line = 5,
+	re_end_of_line = 6
+
+}							t_regex_anchor;
+
 union						u_regex_code
 {
 	t_regex_string			*string;
 	t_regex_set				set;
 	t_regex_group			group;
+	t_regex_anchor			anchor;
 };
 
 typedef struct				s_regex_quantifier
