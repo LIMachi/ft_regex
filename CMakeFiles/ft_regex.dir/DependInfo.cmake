@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/root/Desktop/ft_regex/src/ft_regex.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/ft_regex.c.o"
   "/root/Desktop/ft_regex/src/ft_regex_debug.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o"
   "/root/Desktop/ft_regex/src/group.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/group.c.o"
+  "/root/Desktop/ft_regex/src/new_code.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/new_code.c.o"
   "/root/Desktop/ft_regex/src/quantifier.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/quantifier.c.o"
   "/root/Desktop/ft_regex/src/set.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/set.c.o"
   "/root/Desktop/ft_regex/src/string.c" "/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir/src/string.c.o"

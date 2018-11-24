@@ -204,6 +204,33 @@ src/group.c.s:
 	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/group.c.s
 .PHONY : src/group.c.s
 
+src/new_code.o: src/new_code.c.o
+
+.PHONY : src/new_code.o
+
+# target to build an object file
+src/new_code.c.o:
+	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/new_code.c.o
+.PHONY : src/new_code.c.o
+
+src/new_code.i: src/new_code.c.i
+
+.PHONY : src/new_code.i
+
+# target to preprocess a source file
+src/new_code.c.i:
+	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/new_code.c.i
+.PHONY : src/new_code.c.i
+
+src/new_code.s: src/new_code.c.s
+
+.PHONY : src/new_code.s
+
+# target to generate assembly for a file
+src/new_code.c.s:
+	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/new_code.c.s
+.PHONY : src/new_code.c.s
+
 src/quantifier.o: src/quantifier.c.o
 
 .PHONY : src/quantifier.o
@@ -357,6 +384,9 @@ help:
 	@echo "... src/group.o"
 	@echo "... src/group.i"
 	@echo "... src/group.s"
+	@echo "... src/new_code.o"
+	@echo "... src/new_code.i"
+	@echo "... src/new_code.s"
 	@echo "... src/quantifier.o"
 	@echo "... src/quantifier.i"
 	@echo "... src/quantifier.s"

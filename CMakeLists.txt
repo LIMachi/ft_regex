@@ -6,4 +6,4 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
 file(GLOB SOURCES
         src/*.c)
 
-add_library(ft_regex ${SOURCES} src/group.c inc/ft_regex_defines.h inc/ft_regex_types.h inc/ft_regex_functions.h)
+add_library(ft_regex ${SOURCES} src/group.c inc/ft_regex_defines.h inc/ft_regex_types.h inc/ft_regex_functions.h src/new_code.c)

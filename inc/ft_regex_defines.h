@@ -22,7 +22,9 @@
 # define FT_REGEX_ALL_STARTERS "{+*?[("
 # define FT_REGEX_ALL_ENDERS "}])"
 
-# define FT_REGEX_ALL_SPECIAL_CHAR "{+*?[(|}])"
+# define FT_REGEX_ANCHORS "^$"
+
+# define FT_REGEX_ALL_SPECIAL_CHAR "{+*?[(|}])^$"
 
 # define FT_REGEX_ESCAPED_CHAR '\\'
 

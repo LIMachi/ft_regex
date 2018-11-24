@@ -96,9 +96,22 @@ CMakeFiles/ft_regex.dir/src/group.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ft_regex.dir/src/group.c.s"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /root/Desktop/ft_regex/src/group.c -o CMakeFiles/ft_regex.dir/src/group.c.s
 
+CMakeFiles/ft_regex.dir/src/new_code.c.o: CMakeFiles/ft_regex.dir/flags.make
+CMakeFiles/ft_regex.dir/src/new_code.c.o: src/new_code.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/ft_regex.dir/src/new_code.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ft_regex.dir/src/new_code.c.o   -c /root/Desktop/ft_regex/src/new_code.c
+
+CMakeFiles/ft_regex.dir/src/new_code.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/ft_regex.dir/src/new_code.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /root/Desktop/ft_regex/src/new_code.c > CMakeFiles/ft_regex.dir/src/new_code.c.i
+
+CMakeFiles/ft_regex.dir/src/new_code.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/ft_regex.dir/src/new_code.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /root/Desktop/ft_regex/src/new_code.c -o CMakeFiles/ft_regex.dir/src/new_code.c.s
+
 CMakeFiles/ft_regex.dir/src/quantifier.c.o: CMakeFiles/ft_regex.dir/flags.make
 CMakeFiles/ft_regex.dir/src/quantifier.c.o: src/quantifier.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/ft_regex.dir/src/quantifier.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/ft_regex.dir/src/quantifier.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ft_regex.dir/src/quantifier.c.o   -c /root/Desktop/ft_regex/src/quantifier.c
 
 CMakeFiles/ft_regex.dir/src/quantifier.c.i: cmake_force
@@ -111,7 +124,7 @@ CMakeFiles/ft_regex.dir/src/quantifier.c.s: cmake_force
 
 CMakeFiles/ft_regex.dir/src/set.c.o: CMakeFiles/ft_regex.dir/flags.make
 CMakeFiles/ft_regex.dir/src/set.c.o: src/set.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/ft_regex.dir/src/set.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/ft_regex.dir/src/set.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ft_regex.dir/src/set.c.o   -c /root/Desktop/ft_regex/src/set.c
 
 CMakeFiles/ft_regex.dir/src/set.c.i: cmake_force
@@ -124,7 +137,7 @@ CMakeFiles/ft_regex.dir/src/set.c.s: cmake_force
 
 CMakeFiles/ft_regex.dir/src/string.c.o: CMakeFiles/ft_regex.dir/flags.make
 CMakeFiles/ft_regex.dir/src/string.c.o: src/string.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/ft_regex.dir/src/string.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/ft_regex.dir/src/string.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ft_regex.dir/src/string.c.o   -c /root/Desktop/ft_regex/src/string.c
 
 CMakeFiles/ft_regex.dir/src/string.c.i: cmake_force
@@ -137,7 +150,7 @@ CMakeFiles/ft_regex.dir/src/string.c.s: cmake_force
 
 CMakeFiles/ft_regex.dir/src/unescape.c.o: CMakeFiles/ft_regex.dir/flags.make
 CMakeFiles/ft_regex.dir/src/unescape.c.o: src/unescape.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/ft_regex.dir/src/unescape.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/ft_regex.dir/src/unescape.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ft_regex.dir/src/unescape.c.o   -c /root/Desktop/ft_regex/src/unescape.c
 
 CMakeFiles/ft_regex.dir/src/unescape.c.i: cmake_force
@@ -150,7 +163,7 @@ CMakeFiles/ft_regex.dir/src/unescape.c.s: cmake_force
 
 CMakeFiles/ft_regex.dir/src/valid_param.c.o: CMakeFiles/ft_regex.dir/flags.make
 CMakeFiles/ft_regex.dir/src/valid_param.c.o: src/valid_param.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/ft_regex.dir/src/valid_param.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/ft_regex.dir/src/valid_param.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/ft_regex.dir/src/valid_param.c.o   -c /root/Desktop/ft_regex/src/valid_param.c
 
 CMakeFiles/ft_regex.dir/src/valid_param.c.i: cmake_force
@@ -166,6 +179,7 @@ ft_regex_OBJECTS = \
 "CMakeFiles/ft_regex.dir/src/ft_regex.c.o" \
 "CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o" \
 "CMakeFiles/ft_regex.dir/src/group.c.o" \
+"CMakeFiles/ft_regex.dir/src/new_code.c.o" \
 "CMakeFiles/ft_regex.dir/src/quantifier.c.o" \
 "CMakeFiles/ft_regex.dir/src/set.c.o" \
 "CMakeFiles/ft_regex.dir/src/string.c.o" \
@@ -178,6 +192,7 @@ ft_regex_EXTERNAL_OBJECTS =
 libft_regex.a: CMakeFiles/ft_regex.dir/src/ft_regex.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/src/group.c.o
+libft_regex.a: CMakeFiles/ft_regex.dir/src/new_code.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/src/quantifier.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/src/set.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/src/string.c.o
@@ -185,7 +200,7 @@ libft_regex.a: CMakeFiles/ft_regex.dir/src/unescape.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/src/valid_param.c.o
 libft_regex.a: CMakeFiles/ft_regex.dir/build.make
 libft_regex.a: CMakeFiles/ft_regex.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking C static library libft_regex.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/root/Desktop/ft_regex/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking C static library libft_regex.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/ft_regex.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ft_regex.dir/link.txt --verbose=$(VERBOSE)
 

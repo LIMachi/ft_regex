@@ -8,31 +8,9 @@
 
 /root/Desktop/ft_regex/inc/ft_regex_defines.h
 
-/root/Desktop/ft_regex/inc/ft_regex_functions.h
-../src/valid_param.c
-/root/Desktop/ft_regex/src/valid_param.c
-
 /root/Desktop/ft_regex/inc/ft_regex_types.h
 
-/root/Desktop/ft_regex/src/ft_regex_debug.c
-stdlib.h
--
-string.h
--
-stdint.h
--
-../inc/ft_regex_defines.h
-/root/Desktop/ft_regex/inc/ft_regex_defines.h
-../inc/ft_regex_types.h
-/root/Desktop/ft_regex/inc/ft_regex_types.h
-../inc/ft_regex_functions.h
-/root/Desktop/ft_regex/inc/ft_regex_functions.h
-stdio.h
--
-ctype.h
--
-
-/root/Desktop/ft_regex/src/valid_param.c
+/root/Desktop/ft_regex/src/new_code.c
 stdlib.h
 -
 stdint.h

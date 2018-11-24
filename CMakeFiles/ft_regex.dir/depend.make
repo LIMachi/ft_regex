@@ -19,6 +19,10 @@ CMakeFiles/ft_regex.dir/src/group.c.o: inc/ft_regex_types.h
 CMakeFiles/ft_regex.dir/src/group.c.o: src/group.c
 CMakeFiles/ft_regex.dir/src/group.c.o: src/valid_param.c
 
+CMakeFiles/ft_regex.dir/src/new_code.c.o: inc/ft_regex_defines.h
+CMakeFiles/ft_regex.dir/src/new_code.c.o: inc/ft_regex_types.h
+CMakeFiles/ft_regex.dir/src/new_code.c.o: src/new_code.c
+
 CMakeFiles/ft_regex.dir/src/quantifier.c.o: inc/ft_regex_defines.h
 CMakeFiles/ft_regex.dir/src/quantifier.c.o: inc/ft_regex_functions.h
 CMakeFiles/ft_regex.dir/src/quantifier.c.o: inc/ft_regex_types.h

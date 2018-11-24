@@ -75,4 +75,8 @@ t_regex_code				*group(char *src,
 									t_regex_error *error,
 									t_regex_code *parent);
 
+t_regex_code				*new_code(t_regex_code *parent,
+										t_regex_error *error,
+										t_regex_type type);
+
 #endif

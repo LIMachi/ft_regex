@@ -38,8 +38,8 @@ static inline t_regex_flags	group_extract_flags(char *src,
 				return (re_normal | re_look_ahead);
 			else if (*(*next) == '!')
 				return (re_normal | re_negative);
-			else if (*(*next) == 'N')
-				return (re_normal | re_reference); //TODO: extract name/id
+			//else if (*(*next) == 'N')
+			//	return (re_normal | re_reference); //TODO: extract name/id
 			else if (*(*next) == '<'){
 				if (*++(*next) == '=')
 					return (re_normal | re_look_behind);
@@ -57,34 +57,19 @@ static inline t_regex_error	extract_special_escape(char *src,
 													t_regex_error *error,
 													t_regex_code *out)
 {
-	t_regex_branch	*branch;
 	t_regex_code	*tmp;
 	int				c;
 
 	if (*error != re_ok)
 		return (*error);
-	branch = &out->data.group.branches[out->data.group.nb_branches - 1];
-	if ((tmp = malloc(sizeof(t_regex_code))) == NULL)
-		return (*error = re_out_of_memory);
 	c = -unescape(src, 0, next, error) - 1;
-	if (*error != re_ok)
+	if ((tmp = new_code(out, error, c < 6 ? re_set : re_anchor)) == NULL
+			|| *error != re_ok)
 		return (*error);
 	if (c < 6)
-		*tmp = (t_regex_code){.type = re_set, .next = NULL, .prev = branch->last,
-			.parent = out, .quantifier = {1, 1, 0}, .data.set = SET_SPE[c]};
+		tmp->data.set = SET_SPE[c];
 	else
-		*tmp = (t_regex_code){.type = re_anchor, .next = NULL, .prev = branch->last,
-				.parent = out, .quantifier = {1, 1, 0}, .data.anchor = c - 5};
-	if (branch->code == NULL)
-	{
-		branch->code = tmp;
-		branch->last = tmp;
-	}
-	else
-	{
-		branch->last->next = tmp;
-		branch->last = tmp;
-	}
+		tmp->data.anchor = c - 5;
 	return (*error);
 }
 
@@ -93,31 +78,22 @@ static inline t_regex_error	extract_string(char *src,
 											t_regex_error *error,
 											t_regex_code *out)
 {
-	t_regex_branch	*branch;
+	t_regex_string	*s;
 	t_regex_code	*tmp;
 	int				c;
 
 	if (*error != re_ok)
 		return (*error);
-	branch = &out->data.group.branches[out->data.group.nb_branches - 1];
-	if ((tmp = malloc(sizeof(t_regex_code))) == NULL)
-		return (*error = re_out_of_memory);
-	*tmp = (t_regex_code){.type = re_string, .next = NULL,
-			.prev = branch->last, .parent = out, .quantifier = {1, 1, 0},
-			.data = {.string = string(src, next, error)}};
+	s = string(src, next, error);
 	if (*error != re_ok)
 		return (*error);
-	if (branch->code == NULL)
+	if ((tmp = new_code(out, error, re_string)) == NULL || *error != re_ok)
 	{
-		branch->code = tmp;
-		branch->last = tmp;
+		free(s);
+		return (*error);
 	}
-	else
-	{
-		branch->last->next = tmp;
-		branch->last = tmp;
-	}
-	return (*error);
+	tmp->data.string = s;
+	return (re_ok);
 }
 
 static t_regex_code			*group_rec(char *src,
