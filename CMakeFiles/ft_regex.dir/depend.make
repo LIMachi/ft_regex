@@ -13,6 +13,12 @@ CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o: inc/ft_regex_types.h
 CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o: src/ft_regex_debug.c
 CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o: src/valid_param.c
 
+CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o: inc/ft_regex_defines.h
+CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o: inc/ft_regex_functions.h
+CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o: inc/ft_regex_types.h
+CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o: src/ft_regex_free.c
+CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o: src/valid_param.c
+
 CMakeFiles/ft_regex.dir/src/group.c.o: inc/ft_regex_defines.h
 CMakeFiles/ft_regex.dir/src/group.c.o: inc/ft_regex_functions.h
 CMakeFiles/ft_regex.dir/src/group.c.o: inc/ft_regex_types.h

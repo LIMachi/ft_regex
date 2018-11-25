@@ -177,6 +177,33 @@ src/ft_regex_debug.c.s:
 	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.s
 .PHONY : src/ft_regex_debug.c.s
 
+src/ft_regex_free.o: src/ft_regex_free.c.o
+
+.PHONY : src/ft_regex_free.o
+
+# target to build an object file
+src/ft_regex_free.c.o:
+	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o
+.PHONY : src/ft_regex_free.c.o
+
+src/ft_regex_free.i: src/ft_regex_free.c.i
+
+.PHONY : src/ft_regex_free.i
+
+# target to preprocess a source file
+src/ft_regex_free.c.i:
+	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/ft_regex_free.c.i
+.PHONY : src/ft_regex_free.c.i
+
+src/ft_regex_free.s: src/ft_regex_free.c.s
+
+.PHONY : src/ft_regex_free.s
+
+# target to generate assembly for a file
+src/ft_regex_free.c.s:
+	$(MAKE) -f CMakeFiles/ft_regex.dir/build.make CMakeFiles/ft_regex.dir/src/ft_regex_free.c.s
+.PHONY : src/ft_regex_free.c.s
+
 src/group.o: src/group.c.o
 
 .PHONY : src/group.o
@@ -381,6 +408,9 @@ help:
 	@echo "... src/ft_regex_debug.o"
 	@echo "... src/ft_regex_debug.i"
 	@echo "... src/ft_regex_debug.s"
+	@echo "... src/ft_regex_free.o"
+	@echo "... src/ft_regex_free.i"
+	@echo "... src/ft_regex_free.s"
 	@echo "... src/group.o"
 	@echo "... src/group.i"
 	@echo "... src/group.s"

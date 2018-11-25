@@ -79,7 +79,7 @@ void	rec_print(t_regex_code *regex, int depth, const char *big_space)
 
 	if (regex == NULL)
 		return ;
-	printf("\n%1$.*2$stype: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$."
+	printf("%1$.*2$stype: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$."
 		"*2$sparent: %6$p\n%1$.*2$squantifier: [%7$zu, %8$zu, %9$sgreedy]\n",
 		big_space, depth * 2, type_names[regex->type], regex->prev,
 		regex->next, regex->parent, regex->quantifier.min,
@@ -110,7 +110,7 @@ void	rec_print(t_regex_code *regex, int depth, const char *big_space)
 		rec_print(regex->next, depth, big_space);
 }
 
-int	ft_regex_debug(t_regex_code *regex)
+int	ft_regex_debug(t_regex_code *regex, t_regex_error error)
 {
 	size_t			total;
 	size_t			min;
@@ -118,11 +118,17 @@ int	ft_regex_debug(t_regex_code *regex)
 	const char		big_space[] = "                                           "
 
 	"                                                                         "
-	"                                                                         "
-	"                                                                         "
 	"                                                                        ";
-	if (regex->type == re_group && regex->data.group.flags & re_main_group)
+	if (error != re_ok)
 	{
+		printf("ERROR: %s\n", (char *[8]) {"ok", "invalid parameter",
+			"out of memory", "code too long", "invalid character",
+			"dangling quantifier", "missing group ender",
+			"dangling group ender"}[error]);
+	}
+	if (regex == NULL)
+		return (0);
+	if (regex->type == re_group && regex->data.group.flags & re_main_group){
 		total = 0;
 		min = 0;
 		max = 0;

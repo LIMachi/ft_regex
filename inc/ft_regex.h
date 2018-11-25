@@ -15,8 +15,9 @@ int				ft_regex_find(char *str,
 							t_regex_match *matchs,
 							int nb_matchs);
 
-int				ft_regex_debug(t_regex_code *regex);
+int				ft_regex_debug(t_regex_code *regex,
+								t_regex_error error);
 
-int				ft_regex_free(t_regex *regex);
+int				ft_regex_free(t_regex_code *regex);
 
 #endif

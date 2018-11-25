@@ -1,1 +1,2 @@
-make && gcc test.c -L. -lft_regex && ./a.out $*
+#!/usr/bin/env bash
+make && gcc test.c -L. -lft_regex && valgrind ./a.out $*

@@ -89,8 +89,8 @@ typedef enum				e_regex_group_flags
 
 typedef struct				s_regex_branch
 {
-	size_t					min_len;
-	size_t					max_len;
+	size_t					min_len; //debug
+	size_t					max_len; //debug
 	t_regex_code			*code;
 	t_regex_code			*last; //compilation only
 }							t_regex_branch;

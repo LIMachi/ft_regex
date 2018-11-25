@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/ft_regex.dir/src/ft_regex.c.o"
   "CMakeFiles/ft_regex.dir/src/ft_regex_debug.c.o"
+  "CMakeFiles/ft_regex.dir/src/ft_regex_free.c.o"
   "CMakeFiles/ft_regex.dir/src/group.c.o"
   "CMakeFiles/ft_regex.dir/src/new_code.c.o"
   "CMakeFiles/ft_regex.dir/src/quantifier.c.o"

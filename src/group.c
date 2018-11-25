@@ -17,7 +17,7 @@ void	*reallocf(void *ptr, size_t size)
 {
 	void	*out;
 
-	out = reallocf(ptr, size);
+	out = realloc(ptr, size);
 	if (out == NULL && ptr != NULL && size != 0)
 		free(ptr);
 	return (out);
@@ -38,8 +38,6 @@ static inline t_regex_flags	group_extract_flags(char *src,
 				return (re_normal | re_look_ahead);
 			else if (*(*next) == '!')
 				return (re_normal | re_negative);
-			//else if (*(*next) == 'N')
-			//	return (re_normal | re_reference); //TODO: extract name/id
 			else if (*(*next) == '<'){
 				if (*++(*next) == '=')
 					return (re_normal | re_look_behind);
@@ -106,13 +104,16 @@ static t_regex_code			*group_rec(char *src,
 	while (*error == re_ok && **next != '\0' && **next != ')')
 	{
 		if (strchr(FT_REGEX_CHOICE_SEPARATORS, **next) != NULL)
+		{
 			if ((out->data.group.branches = reallocf(
 					out->data.group.branches, sizeof(t_regex_branch)
 											  * ++out->data.group.nb_branches)) == NULL)
 				*error = re_out_of_memory;
 			else
-				out->data.group.branches[out->data.group.nb_branches] =
+				out->data.group.branches[out->data.group.nb_branches - 1] =
 						(t_regex_branch) {.code = NULL, .max_len = 0, .min_len = 0};
+		++*next;
+		}
 		else if (strchr(FT_REGEX_ALL_STARTERS, **next) != NULL)
 			NULL; //TODO: extract any special
 		else if (strchr(FT_REGEX_ALL_ENDERS, **next) != NULL)
