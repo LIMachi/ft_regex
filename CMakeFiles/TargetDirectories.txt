@@ -1,3 +1,0 @@
-/root/Desktop/ft_regex/CMakeFiles/rebuild_cache.dir
-/root/Desktop/ft_regex/CMakeFiles/edit_cache.dir
-/root/Desktop/ft_regex/CMakeFiles/ft_regex.dir

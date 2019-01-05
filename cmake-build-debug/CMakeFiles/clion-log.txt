@@ -1,4 +1,0 @@
-Cannot generate into C:\Users\hugom\Desktop\ft_regex
-It is already used for project \root\Desktop\ft_regex
-
-Please either delete it manually or select another generation directory
