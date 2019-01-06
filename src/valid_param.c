@@ -3,7 +3,8 @@
 #include "../inc/ft_regex_defines.h"
 #include "../inc/ft_regex_types.h"
 /*
-** must always be inline since it uses the stack of the calling function to store temporary next and error
+** must always be inline since it uses the stack of the calling function to
+** store temporary next and error
 */
 
 __attribute__((always_inline)) inline int	valid_param(char **src,

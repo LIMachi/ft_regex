@@ -149,10 +149,20 @@ struct						s_regex_code
 ** }
 */
 
+typedef struct				s_regex_compile_env
+{
+	size_t					*nb_groups;
+	size_t					*nb_ncg;
+	t_regex_code			*parent;
+	t_regex_code			*out;
+}							t_regex_compile_env;
+
 typedef struct				s_regex
 {
-	t_regex_code			code[FT_REGEX_MAXIMUM_CODE_LENGTH];
-	size_t					code_length;
+	t_regex_code			*code;
+	size_t					nb_groups;
+	size_t					nb_non_catching_groups;
+	t_regex_error			error;
 }							t_regex;
 
 typedef struct				s_regex_match

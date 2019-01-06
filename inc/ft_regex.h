@@ -6,7 +6,7 @@
 # include "ft_regex_defines.h"
 # include "ft_regex_types.h"
 
-t_regex_code	*ft_regex_compile(char *expression,
+t_regex			ft_regex_compile(char *expression,
 								t_regex_flags flags,
 								t_regex_error *error);
 

@@ -103,7 +103,7 @@ static inline t_regex_error	extract_string(char *src,
 static inline t_regex_error	extract_any(char *src,
 										char **next,
 										t_regex_error *error,
-										t_regex_code *out)
+										t_regex_compile_env env)
 {
 	t_regex_code	*tmp;
 	t_regex_branch	*branch;
@@ -112,14 +112,16 @@ static inline t_regex_error	extract_any(char *src,
 		return (*error);
 	if (strchr(FT_REGEX_QUANTIFIERS_STARTERS, *src))
 	{
-		out = out->data.group.branches[out->data.group.nb_branches - 1].last;
-		if (out == NULL || out->type == re_anchor)
+		tmp = env.out->data.group.branches[
+			env.out->data.group.nb_branches - 1].last;
+		if (tmp == NULL || tmp->type == re_anchor)
 			return (*error = re_dangling_quantifier);
-		out->quantifier = quantifier(src, next, error);
+		tmp->quantifier = quantifier(src, next, error);
 	}
 	else if (strchr(FT_REGEX_SETS_STARTERS, *src))
 	{
-		if ((tmp = new_code(out, error, re_set)) == NULL || *error != re_ok)
+		if ((tmp = new_code(env.out, error, re_set)) == NULL
+				|| *error != re_ok)
 			return (*error);
 		tmp->data.set = set(src, next, error);
 		if (*error != re_ok)
@@ -130,11 +132,12 @@ static inline t_regex_error	extract_any(char *src,
 	}
 	else if (strchr(FT_REGEX_GROUPS_STARTERS, *src))
 	{
-		tmp = group(src, next, error, out);
+		env.parent = env.out;
+		tmp = group(src, next, error, env);
 		if (*error != re_ok)
 			return (*error);
-		branch = &out->data.group.branches[
-			out->data.group.nb_branches - 1];
+		branch = &env.out->data.group.branches[
+			env.out->data.group.nb_branches - 1];
 		tmp->prev = branch->last;
 		if (branch->code == NULL)
 		{
@@ -153,7 +156,7 @@ static inline t_regex_error	extract_any(char *src,
 static t_regex_code			*group_rec(char *src,
 										char **next,
 										t_regex_error *error,
-										t_regex_code *out)
+										t_regex_compile_env env)
 {
 	*next = src;
 	*error = re_ok;
@@ -161,60 +164,63 @@ static t_regex_code			*group_rec(char *src,
 	{
 		if (strchr(FT_REGEX_CHOICE_SEPARATORS, **next) != NULL)
 		{
-			if ((out->data.group.branches = reallocf(
-					out->data.group.branches, sizeof(t_regex_branch)
-											  * ++out->data.group.nb_branches)) == NULL)
+			if ((env.out->data.group.branches = reallocf(
+					env.out->data.group.branches, sizeof(t_regex_branch) *
+						++env.out->data.group.nb_branches)) == NULL)
 				*error = re_out_of_memory;
 			else
-				out->data.group.branches[out->data.group.nb_branches - 1] =
-						(t_regex_branch) {.code = NULL, .max_len = 0, .min_len = 0};
+				env.out->data.group.branches[
+					env.out->data.group.nb_branches - 1] =
+				(t_regex_branch) {.code = NULL, .max_len = 0, .min_len = 0};
 		++*next;
 		}
 		else if (strchr(FT_REGEX_ALL_STARTERS, **next) != NULL)
-			extract_any(*next, next, error, out);
+			extract_any(*next, next, error, env);
 		else if (strchr(FT_REGEX_ALL_ENDERS, **next) != NULL)
 			*error = re_invalid_character;
 		else if (**next == '\\' && unescape(*next, 0, NULL, error) < 0)
-			extract_special_escape(*next, next, error, out);
+			extract_special_escape(*next, next, error, env.out);
 		else
-			extract_string(*next, next, error, out);
+			extract_string(*next, next, error, env.out);
 	}
-	if (**next != ')' && !(out->data.group.flags & re_main_group))
+	if (**next != ')' && !(env.out->data.group.flags & re_main_group))
 		*error = re_missing_group_ender;
-	if (**next == ')' && out->data.group.flags & re_main_group)
+	if (**next == ')' && env.out->data.group.flags & re_main_group)
 		*error = re_dangling_group_ender;
-	if (*error == re_ok && !(out->data.group.flags & re_main_group))
+	if (*error == re_ok && !(env.out->data.group.flags & re_main_group))
 		++*next;
-	return (out);
+	return (env.out);
 }
 
 t_regex_code				*group(char *src,
 									char **next,
 									t_regex_error *error,
-									t_regex_code *parent)
+									t_regex_compile_env env)
 {
-	t_regex_code	*out;
 	t_regex_group	group;
 
 	if (valid_param(&src, &next, &error))
 		return (NULL);
-	if (parent != NULL && *src != '(')
+	if (env.parent != NULL && *src != '(')
 		return (*error = re_invalid_character, NULL);
-	if ((out = malloc(sizeof(t_regex_code))) == NULL)
+	if ((env.out = malloc(sizeof(t_regex_code))) == NULL)
 		return (*error = re_out_of_memory, NULL);
-	group = (t_regex_group){.index = 0, .label = NULL, .nb_branches = 1,
-		.flags = parent == NULL ? re_main_group : 0, .branches = NULL};
-	if (parent != NULL)
+	group = (t_regex_group){.index = 0, .label = NULL,
+		.nb_branches = 1, .branches = NULL,
+		.flags = env.parent == NULL ? re_main_group : 0};
+	if (env.parent != NULL)
 		group.flags = group_extract_flags(src, &src, error);
+	group.index = group.flags & re_non_holding ?
+		-++(*env.nb_ncg) : (*env.nb_groups)++;
 	if (*error != re_ok || ((group.branches = malloc(sizeof(t_regex_branch)))
 		== NULL && (*error = re_out_of_memory)))
 	{
-		free(out);
+		free(env.out);
 		return (NULL);
 	}
-	*out = (t_regex_code){.type = re_group, .prev = NULL, .parent = parent,
-			.quantifier = {1, 1, 0}, .next = NULL, .data = {.group = group}};
-	out->data.group.branches[0] = (t_regex_branch){.min_len = 0, .max_len = 0,
-												.code = NULL, .last = NULL};
-	return (group_rec(src, next, error, out));
+	*env.out = (t_regex_code){.type = re_group, .prev = NULL, .next = NULL,
+	.parent = env.parent, .quantifier = {1, 1, 0},  .data = {.group = group}};
+	env.out->data.group.branches[0] = (t_regex_branch){.min_len = 0,
+									.max_len = 0, .code = NULL, .last = NULL};
+	return (group_rec(src, next, error, env));
 }

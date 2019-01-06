@@ -73,7 +73,7 @@ int							unescape(char *src,
 t_regex_code				*group(char *src,
 									char **next,
 									t_regex_error *error,
-									t_regex_code *parent);
+									t_regex_compile_env env);
 
 t_regex_code				*new_code(t_regex_code *parent,
 										t_regex_error *error,
