@@ -5,8 +5,8 @@
 //TODO: | ( (?: ) (?= (?! (?<= (?<! (?N
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "../inc/ft_regex_defines.h"
 #include "../inc/ft_regex_types.h"
@@ -31,7 +31,8 @@ static inline t_regex_flags	group_extract_flags(char *src,
 	*error = re_ok;
 	if (*(*next) == '(')
 	{
-		if (*++(*next) == '?'){
+		if (*++(*next) == '?')
+		{
 			if (*++(*next) == ':')
 				return (re_normal | re_non_holding);
 			else if (*(*next) == '=')
@@ -44,8 +45,8 @@ static inline t_regex_flags	group_extract_flags(char *src,
 				else if (*(*next) == '!')
 					return (re_normal | re_look_behind | re_negative);
 			}
+			*error = re_invalid_character;
 		}
-		*error = re_invalid_character;
 	}
 	return (re_normal);
 }
@@ -78,7 +79,6 @@ static inline t_regex_error	extract_string(char *src,
 {
 	t_regex_string	*s;
 	t_regex_code	*tmp;
-	int				c;
 
 	if (*error != re_ok)
 		return (*error);
@@ -91,6 +91,56 @@ static inline t_regex_error	extract_string(char *src,
 		return (*error);
 	}
 	tmp->data.string = s;
+	return (re_ok);
+}
+
+static inline t_regex_error	extract_any(char *src,
+										char **next,
+										t_regex_error *error,
+										t_regex_code *out)
+{
+	t_regex_code	*tmp;
+	t_regex_branch	*branch;
+
+	if (*error != re_ok)
+		return (*error);
+	if (strchr(FT_REGEX_QUANTIFIERS_STARTERS, *src))
+	{
+		out = out->data.group.branches[out->data.group.nb_branches - 1].last;
+		if (out == NULL || out->type == re_anchor)
+			return (*error = re_dangling_quantifier);
+		out->quantifier = quantifier(src, next, error);
+	}
+	else if (strchr(FT_REGEX_SETS_STARTERS, *src))
+	{
+		if ((tmp = new_code(out, error, re_set)) == NULL || *error != re_ok)
+			return (*error);
+		tmp->data.set = set(src, next, error);
+		if (*error != re_ok)
+		{
+			free(tmp);
+			return (*error);
+		}
+	}
+	else if (strchr(FT_REGEX_GROUPS_STARTERS, *src))
+	{
+		tmp = group(src, next, error, out);
+		if (*error != re_ok)
+			return (*error);
+		branch = &out->data.group.branches[
+			out->data.group.nb_branches - 1];
+		tmp->prev = branch->last;
+		if (branch->code == NULL)
+		{
+			branch->code = tmp;
+			branch->last = tmp;
+		}
+		else
+		{
+			branch->last->next = tmp;
+			branch->last = tmp;
+		}
+	}
 	return (re_ok);
 }
 
@@ -115,7 +165,7 @@ static t_regex_code			*group_rec(char *src,
 		++*next;
 		}
 		else if (strchr(FT_REGEX_ALL_STARTERS, **next) != NULL)
-			NULL; //TODO: extract any special
+			extract_any(*next, next, error, out);
 		else if (strchr(FT_REGEX_ALL_ENDERS, **next) != NULL)
 			*error = re_invalid_character;
 		else if (**next == '\\' && unescape(*next, 0, NULL, error) < 0)
@@ -127,6 +177,8 @@ static t_regex_code			*group_rec(char *src,
 		*error = re_missing_group_ender;
 	if (**next == ')' && out->data.group.flags & re_main_group)
 		*error = re_dangling_group_ender;
+	if (*error == re_ok && !(out->data.group.flags & re_main_group))
+		++*next;
 	return (out);
 }
 

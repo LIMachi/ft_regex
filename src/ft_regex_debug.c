@@ -18,13 +18,13 @@ void	ft_regex_debug_set(t_regex_set set, int depth, const char *big_space)
 	size_t	i;
 	int		b;
 
-	printf("%.*s0x%016lX%016lX = ", depth * 2, big_space,
-		(uint64_t)(set >> 64), (uint64_t)(set & -1ull));
+	printf("%.*s0x%016llX%016llX = ", depth * 2, big_space,
+		(unsigned long long)set.bol[1], (unsigned long long)set.bol[0]);
 	i = -1;
 	b = 0;
 	printf("[");
 	while (++i < 128)
-		if (set & (((__uint128_t)1) << i))
+		if (i < 64 ? set.bol[0] & (1ull << i) : set.bol[1] & (1ull << (i - 64)))
 		{
 			if (b)
 				printf(", ");

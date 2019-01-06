@@ -111,7 +111,7 @@ t_regex_code		*ft_regex_compile(char *expression,
 	if (out->code[out->code_length].type != re_undefined)
 		++out->code_length;
 	*/
-
+	(void)flags;
 	if (error != NULL)
 		*error = re_ok;
 	return (group(expression, NULL, error, NULL));

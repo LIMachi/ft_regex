@@ -9,7 +9,7 @@ int	main(int argc, char **argv)
 {
 	t_regex_code	*regex;
 	t_regex_error	error;
-	t_regex_group	groups[1];
+	// t_regex_group	groups[1];
 
 	if (argc != 3)
 		return (printf("%s regex text\n", argv[0]), 0);
