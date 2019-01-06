@@ -19,8 +19,8 @@
 
 # define FT_REGEX_CHOICE_SEPARATORS "|"
 
-# define FT_REGEX_ALL_STARTERS "{[(+*?."
-# define FT_REGEX_ALL_ENDERS "}])\0\0\0\0"
+# define FT_REGEX_ALL_STARTERS "{[(+*?.^$"
+# define FT_REGEX_ALL_ENDERS "}])\0\0\0\0\0\0"
 
 # define FT_REGEX_ANCHORS "^$"
 

@@ -130,6 +130,14 @@ static inline t_regex_error	extract_any(char *src,
 			return (*error);
 		}
 	}
+	else if (strchr(FT_REGEX_ANCHORS, *src))
+	{
+		if ((tmp = new_code(env.out, error, re_anchor)) == NULL
+				|| *error != re_ok)
+			return (*error);
+		tmp->data.anchor = *src == '^' ? re_start_of_string : re_end_of_string;
+		*next = src + 1;
+	}
 	else if (strchr(FT_REGEX_GROUPS_STARTERS, *src))
 	{
 		env.parent = env.out;

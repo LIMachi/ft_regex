@@ -20,4 +20,5 @@ int	main(int argc, char **argv)
 		groups[i] = (t_regex_match){.start = -1, .end = -1};
 	ft_regex_find(argv[2], &regex, groups, regex.nb_groups); //TODO: implement find
 	ft_regex_free(regex.code);
+	free(groups);
 }
