@@ -81,7 +81,7 @@ void	rec_print(t_regex_code *regex, int depth, const char *big_space)
 
 	if (regex == NULL)
 		return ;
-	printf("%1$.*2$stype: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$."
+	printf("%1$.*2$s- type: %3$s\n%1$.*2$sprev: %4$p\n%1$.*2$snext: %5$p\n%1$."
 		"*2$sparent: %6$p\n%1$.*2$squantifier: [%7$zu, %8$zu, %9$sgreedy]\n",
 		big_space, depth * 2, type_names[regex->type], regex->prev,
 		regex->next, regex->parent, regex->quantifier.min,

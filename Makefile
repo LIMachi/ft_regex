@@ -4,6 +4,6 @@ NAME := libft_regex.a
 #TEST_ARG := "[c-a]*(dd\w|(?:non capturing group))+\b|entire new branch" ""
 #TEST_ARG := "(?:ncg)(cg)" ""
 #TEST_ARG := "(?:[^ \t\n\r]|\\\\ )+\\.c" ""
-TEST_ARG := "^test\\.c$$" ""
+TEST_ARG := "^test\\.c+$$" ""
 
 include ../Makefiles/lib.mk

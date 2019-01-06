@@ -10,10 +10,27 @@
 #include "../inc/ft_regex_types.h"
 #include "../inc/ft_regex_functions.h"
 
-static inline t_regex_string	*string_second_pass(char *src,
-													char **next,
-													t_regex_error *error,
-													size_t tmp_size)
+__attribute__((always_inline)) inline int	valid_param(char **src,
+														char ***next,
+														t_regex_error **error)
+{
+	if (*error == NULL)
+		*error = (t_regex_error[1]){re_ok};
+	**error = 0;
+	if (*src == NULL)
+	{
+		**error = 1;
+		return (1);
+	}
+	if (*next == NULL)
+		*next = (char*[1]){*src};
+	return (0);
+}
+
+static inline t_regex_string				*string_second_pass(char *src,
+														char **next,
+														t_regex_error *error,
+														size_t tmp_size)
 {
 	t_regex_string	*out;
 	char 			*ptr;
@@ -41,9 +58,9 @@ static inline t_regex_string	*string_second_pass(char *src,
 	return (*next = src, out);
 }
 
-t_regex_string					*string(char *src,
-										char **next,
-										t_regex_error *error)
+t_regex_string								*string(char *src,
+													char **next,
+													t_regex_error *error)
 {
 	char 			*ptr;
 	size_t			tmp_size;
@@ -67,4 +84,26 @@ t_regex_string					*string(char *src,
 		++tmp_size;
 	}
 	return (string_second_pass(src, next, error, tmp_size));
+}
+
+t_regex_error								extract_string(char *src,
+														char **next,
+														t_regex_error *error,
+														t_regex_code *out)
+{
+	t_regex_string	*s;
+	t_regex_code	*tmp;
+
+	if (*error != re_ok)
+		return (*error);
+	s = string(src, next, error);
+	if (*error != re_ok)
+		return (*error);
+	if ((tmp = new_code(out, error, re_string)) == NULL || *error != re_ok)
+	{
+		free(s);
+		return (*error);
+	}
+	tmp->data.string = s;
+	return (re_ok);
 }

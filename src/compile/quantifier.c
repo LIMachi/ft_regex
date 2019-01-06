@@ -14,9 +14,9 @@
 ** only accepts characters in the set "*+?{}," and accepted by strtol
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+#include <stdlib.h> //strtol
+#include <string.h> //strchr
+#include <stdint.h> //uint64_t
 
 #include "../inc/ft_regex_defines.h"
 #include "../inc/ft_regex_types.h"
@@ -24,7 +24,24 @@
 
 #include <ctype.h> //isspace
 
-static inline t_regex_quantifier	quantifier_extended(char *src,
+__attribute__((always_inline)) inline int	valid_param(char **src,
+														char ***next,
+														t_regex_error **error)
+{
+	if (*error == NULL)
+		*error = (t_regex_error[1]){re_ok};
+	**error = 0;
+	if (*src == NULL)
+	{
+		**error = 1;
+		return (1);
+	}
+	if (*next == NULL)
+		*next = (char*[1]){*src};
+	return (0);
+}
+
+static inline t_regex_quantifier			quantifier_extended(char *src,
 														char **next,
 														t_regex_error *error)
 {
@@ -53,9 +70,9 @@ static inline t_regex_quantifier	quantifier_extended(char *src,
 	return (out);
 }
 
-t_regex_quantifier					quantifier(char *src,
-												char **next,
-												t_regex_error *error)
+t_regex_quantifier							quantifier(char *src,
+														char **next,
+														t_regex_error *error)
 {
 	t_regex_quantifier	out;
 
@@ -73,4 +90,33 @@ t_regex_quantifier					quantifier(char *src,
 	if ((out.non_greedy = (**next == '?')))
 		++(*next);
 	return (out);
+}
+
+t_regex_error								extract_quantifier(char *src,
+														char **next,
+														t_regex_error *error,
+														t_regex_compile_env env)
+{
+	t_regex_code	*tmp;
+	char			c;
+
+	if (*error == re_ok && strchr(FT_REGEX_QUANTIFIERS_STARTERS, *src))
+	{
+		tmp = env.out->data.group.branches[
+			env.out->data.group.nb_branches - 1].last;
+		if (tmp == NULL || tmp->type == re_anchor)
+			return (*error = re_dangling_quantifier);
+		if (tmp->type == re_string && tmp->data.string->len > 1)
+		{
+			if ((tmp = new_code(env.out, error, re_set)) == NULL
+					|| *error != re_ok)
+				return (*error = re_out_of_memory);
+			tmp->data.set = (t_regex_set){.bol = {0, 0}};
+			c = tmp->prev->data.string->ptr[--tmp->prev->data.string->len];
+			tmp->prev->data.string->ptr[tmp->prev->data.string->len + 1] = '\0';
+			tmp->data.set.bol[c >= 64] |= 1ull << (c & 63);
+		}
+		tmp->quantifier = quantifier(src, next, error);
+	}
+	return (*error);
 }

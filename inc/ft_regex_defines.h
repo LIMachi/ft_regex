@@ -73,4 +73,7 @@
 # define DS64 {[0] = -1ull ^ (1ull << '\n'), [1] = -1ull}
 # define DS ((t_regex_set){.bol = DS64})
 
+# define NULLSET64 {[0] = 0, [1] = 0}
+# define NULLSET ((t_regex_set){.bol = NULLSET64})
+
 #endif

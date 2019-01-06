@@ -32,6 +32,23 @@
 
 #include <ctype.h> //isspace
 
+__attribute__((always_inline)) inline int	valid_param(char **src,
+														char ***next,
+														t_regex_error **error)
+{
+	if (*error == NULL)
+		*error = (t_regex_error[1]){re_ok};
+	**error = 0;
+	if (*src == NULL)
+	{
+		**error = 1;
+		return (1);
+	}
+	if (*next == NULL)
+		*next = (char*[1]){*src};
+	return (0);
+}
+
 static inline t_regex_set	i_sts(t_regex_set set1, t_regex_set set2)
 {
 	set1.bol[0] |= set2.bol[0];
@@ -48,22 +65,33 @@ static inline t_regex_set	i_cts(t_regex_set set, int c)
 	return (set);
 }
 
+static inline t_regex_set	i_ccsts(t_regex_set *out, int c1, int c2,
+									t_regex_set set)
+{
+	out->bol[0] |= set.bol[0];
+	out->bol[1] |= set.bol[1];
+	if (c1 >= 0 && c1 < 128)
+		out->bol[c1 >= 64] |= 1ull << (c1 & 63);
+	if (c2 >= 0 && c1 < 128)
+		out->bol[c2 >= 64] |= 1ull << (c2 & 63);
+	return (*out);
+}
+
 static inline t_regex_set	set_interval(char **ptr,
 										t_regex_error *error,
-										size_t *start)
+										size_t *start,
+										t_regex_set *out)
 {
 	size_t				end;
 	size_t				i;
-	t_regex_set			out;
 
-	out = (t_regex_set){.bol = {0, 0}};
 	if (**ptr == ']')
-		return (i_cts(out, '-'));
+		return (i_ccsts(out, '-', -1, NULLSET));
 	if ((int)(end = unescape(*ptr, 1, ptr, error)) < 0 && !*error)
-		out = i_sts(i_cts(out, '-'), SET_SPE[-end - 1]);
+		i_ccsts(out, '-', -1, SET_SPE[-end - 1]);
 	else if (*start == '\0')
-		out = i_sts(i_cts(out, '-'), i_cts(out, end));
-	if (out.bol[0] == 0 && out.bol[1] == 0)
+		i_ccsts(out, '-', end, NULLSET);
+	if (out->bol[0] == 0 && out->bol[1] == 0)
 	{
 		if (*start > end)
 		{
@@ -73,10 +101,10 @@ static inline t_regex_set	set_interval(char **ptr,
 		}
 		i = *start - 1;
 		while (++i <= end)
-			out = i_cts(out, i);
+			out->bol[i >= 64] |= 1ull << (i & 63);
 	}
 	*start = '\0';
-	return (out);
+	return (*out);
 }
 
 static inline t_regex_set	set_internal(char *src,
@@ -93,19 +121,19 @@ static inline t_regex_set	set_internal(char *src,
 	start = '\0';
 	while (!*error && *ptr != '\0' && (*ptr != ']' || (ptr > src && ptr[-1] == '\\')))
 		if (*ptr == '-' && *(++ptr) != '\0')
-			out = i_sts(out, set_interval(&ptr, error, &start));
+			set_interval(&ptr, error, &start, &out);
 		else if (*ptr == '\\' && (end = unescape(ptr, 1, &ptr, error)) | 1 && !*error)
 		{
 			start = (int)end < 0 ? '\0' : end;
-			out = (int)end < 0 ? i_sts(out, SET_SPE[-end - 1]) : i_cts(out, end);
+			(int)end < 0 ? i_ccsts(&out, -1, -1, SET_SPE[-end - 1]) : i_ccsts(&out, end, -1, NULLSET);
 		}
 		else
 		{
-			start = *ptr;
-			out = i_cts(out, *ptr++);
+			start = *ptr++;
+			out.bol[*(ptr - 1) >= 64] = 1ull << (*(ptr - 1) & 63);
 		}
 	if (*ptr != ']')
-		*error = 3;
+		*error = re_missing_set_ender;
 	*next = ptr + 1;
 	return (out);
 }

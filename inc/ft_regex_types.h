@@ -16,7 +16,8 @@ typedef enum				e_regex_error
 	re_invalid_character,
 	re_dangling_quantifier,
 	re_missing_group_ender,
-	re_dangling_group_ender
+	re_dangling_group_ender,
+	re_missing_set_ender
 }							t_regex_error;
 
 typedef enum				e_regex_flags

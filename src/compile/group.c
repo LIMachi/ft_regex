@@ -23,6 +23,23 @@ void	*reallocf(void *ptr, size_t size)
 	return (out);
 }
 
+__attribute__((always_inline)) inline int	valid_param(char **src,
+														char ***next,
+														t_regex_error **error)
+{
+	if (*error == NULL)
+		*error = (t_regex_error[1]){re_ok};
+	**error = 0;
+	if (*src == NULL)
+	{
+		**error = 1;
+		return (1);
+	}
+	if (*next == NULL)
+		*next = (char*[1]){*src};
+	return (0);
+}
+
 static inline t_regex_group_flags	group_extract_flags(char *src,
 												char **next,
 												t_regex_error *error)
@@ -78,28 +95,6 @@ static inline t_regex_error	extract_special_escape(char *src,
 	return (*error);
 }
 
-static inline t_regex_error	extract_string(char *src,
-											char **next,
-											t_regex_error *error,
-											t_regex_code *out)
-{
-	t_regex_string	*s;
-	t_regex_code	*tmp;
-
-	if (*error != re_ok)
-		return (*error);
-	s = string(src, next, error);
-	if (*error != re_ok)
-		return (*error);
-	if ((tmp = new_code(out, error, re_string)) == NULL || *error != re_ok)
-	{
-		free(s);
-		return (*error);
-	}
-	tmp->data.string = s;
-	return (re_ok);
-}
-
 static inline t_regex_error	extract_any(char *src,
 										char **next,
 										t_regex_error *error,
@@ -110,15 +105,9 @@ static inline t_regex_error	extract_any(char *src,
 
 	if (*error != re_ok)
 		return (*error);
-	if (strchr(FT_REGEX_QUANTIFIERS_STARTERS, *src))
-	{
-		tmp = env.out->data.group.branches[
-			env.out->data.group.nb_branches - 1].last;
-		if (tmp == NULL || tmp->type == re_anchor)
-			return (*error = re_dangling_quantifier);
-		tmp->quantifier = quantifier(src, next, error);
-	}
-	else if (strchr(FT_REGEX_SETS_STARTERS, *src))
+	if (extract_quantifier(src, next, error, env) != re_ok)
+		return (*error);
+	if (strchr(FT_REGEX_SETS_STARTERS, *src))
 	{
 		if ((tmp = new_code(env.out, error, re_set)) == NULL
 				|| *error != re_ok)

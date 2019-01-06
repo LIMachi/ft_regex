@@ -9,12 +9,19 @@ t_regex_string				*string(char *src,
 									char **next,
 									t_regex_error *error);
 
+t_regex_error				extract_string(char *src,
+											char **next,
+											t_regex_error *error,
+											t_regex_code *out);
+
 /*
 ** prepare next and error so they can be facultative
 ** for all the functions of this library
 */
 
-#include "../src/compile/valid_param.c" //TODO: fix this shit
+//#ifndef __NO_VALID_PARAM__
+//# include "../src/compile/valid_param.c" //TODO: fix this shit
+//#endif
 
 /*
 int __attribute__((always_inline)) inline valid_param(char **src,
@@ -43,6 +50,10 @@ int __attribute__((always_inline)) inline valid_param(char **src,
 t_regex_quantifier			quantifier(char *src,
 										char **next,
 										t_regex_error *error);
+
+t_regex_error				extract_quantifier(char *src, char **next,
+												t_regex_error *error,
+												t_regex_compile_env env);
 
 /*
 ** extract a set from a string of formats:
