@@ -42,15 +42,17 @@ void	rec_count(t_regex_code *regex, size_t *min, size_t *max, size_t *total)
 	size_t	i;
 	size_t	lmin;
 	size_t	lmax;
+	size_t	len;
 
 	if (regex == NULL || regex->type == re_undefined)
 		return ;
-	++*total;
+	len = regex->type == re_string ? regex->data.string->len : 1;
+	*total += len;
 	rec_count(regex->next, min, max, total);
 	if (regex->type != re_group)
 	{
-		*min += regex->quantifier.min;
-		*max += regex->quantifier.max;
+		*min += regex->quantifier.min * len;
+		*max += regex->quantifier.max * len;
 		return ;
 	}
 	i = -1;

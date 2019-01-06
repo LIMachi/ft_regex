@@ -23,32 +23,38 @@ void	*reallocf(void *ptr, size_t size)
 	return (out);
 }
 
-static inline t_regex_flags	group_extract_flags(char *src,
+static inline t_regex_group_flags	group_extract_flags(char *src,
 												char **next,
 												t_regex_error *error)
 {
-	*next = src;
+	t_regex_group_flags	flags;
+
 	*error = re_ok;
-	if (*(*next) == '(')
+	flags = re_normal;
+	if (*src == '(')
 	{
-		if (*++(*next) == '?')
+		if (*++src == '?')
 		{
-			if (*++(*next) == ':')
-				return (re_normal | re_non_holding);
-			else if (*(*next) == '=')
-				return (re_normal | re_look_ahead);
-			else if (*(*next) == '!')
-				return (re_normal | re_negative);
-			else if (*(*next) == '<'){
-				if (*++(*next) == '=')
-					return (re_normal | re_look_behind);
-				else if (*(*next) == '!')
-					return (re_normal | re_look_behind | re_negative);
+			if (*++src == ':')
+				flags = re_normal | re_non_holding;
+			else if (*src == '=')
+				flags = re_normal | re_look_ahead;
+			else if (*src == '!')
+				flags = re_normal | re_negative;
+			else if (*src == '<')
+			{
+				if (*++src == '=')
+					flags = re_normal | re_look_behind;
+				else if (*src == '!')
+					flags = re_normal | re_look_behind | re_negative;
 			}
-			*error = re_invalid_character;
+			++src;
+			if (flags == re_normal)
+				*error = re_invalid_character;
 		}
 	}
-	return (re_normal);
+	*next = src;
+	return (flags);
 }
 
 static inline t_regex_error	extract_special_escape(char *src,
