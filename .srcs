@@ -1,10 +1,10 @@
-SRCS = src/new_code.c \
-       src/quantifier.c \
-       src/ft_regex_debug.c \
-       src/string.c \
+SRCS = src/ft_regex_debug.c \
        src/ft_regex_free.c \
-       src/group.c \
-       src/valid_param.c \
-       src/unescape.c \
-       src/set.c \
-       src/ft_regex.c
+       src/ft_regex.c \
+       src/compile/new_code.c \
+       src/compile/quantifier.c \
+       src/compile/string.c \
+       src/compile/group.c \
+       src/compile/valid_param.c \
+       src/compile/unescape.c \
+       src/compile/set.c

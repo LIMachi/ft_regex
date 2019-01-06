@@ -4,6 +4,7 @@
 ** end with -: set includes literal -
 ** start with - (after starting ^): set includes literal -
 ** char1-char2: all character in the interval [char1, char2]
+** .      !"<special \n>"                                  ok
 ** []     ""                                               ok
 ** [abc]  "abc"                                            ok
 ** [^abc] !"abc"                                           ok
@@ -118,9 +119,14 @@ t_regex_set					set(char *src,
 	out = (t_regex_set){.bol = {0, 0}};
 	if (valid_param(&src, &next, &error))
 		return (out);
+	if (*src == '.')
+	{
+		*next = src + 1;
+		return (DS);
+	}
 	if (*src != '[')
 	{
-		*error = 2;
+		*error = re_invalid_character;
 		return (out);
 	}
 	++src;

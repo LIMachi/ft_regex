@@ -14,7 +14,7 @@ t_regex_string				*string(char *src,
 ** for all the functions of this library
 */
 
-#include "../src/valid_param.c" //TODO: fix this shit
+#include "../src/compile/valid_param.c" //TODO: fix this shit
 
 /*
 int __attribute__((always_inline)) inline valid_param(char **src,

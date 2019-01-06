@@ -9,22 +9,22 @@
 # define FT_REGEX_MAXIMUM_RECURSION_DEPTH 64
 
 # define FT_REGEX_QUANTIFIERS_STARTERS "{+*?"
-# define FT_REGEX_QUANTIFIERS_ENDERS "}"
+# define FT_REGEX_QUANTIFIERS_ENDERS "}\0\0\0"
 
-# define FT_REGEX_SETS_STARTERS "["
-# define FT_REGEX_SETS_ENDERS "]"
+# define FT_REGEX_SETS_STARTERS "[."
+# define FT_REGEX_SETS_ENDERS "]\0"
 
 # define FT_REGEX_GROUPS_STARTERS "("
 # define FT_REGEX_GROUPS_ENDERS ")"
 
 # define FT_REGEX_CHOICE_SEPARATORS "|"
 
-# define FT_REGEX_ALL_STARTERS "{+*?[("
-# define FT_REGEX_ALL_ENDERS "}])"
+# define FT_REGEX_ALL_STARTERS "{[(+*?."
+# define FT_REGEX_ALL_ENDERS "}])\0\0\0\0"
 
 # define FT_REGEX_ANCHORS "^$"
 
-# define FT_REGEX_ALL_SPECIAL_CHAR "{+*?[(|}])^$"
+# define FT_REGEX_ALL_SPECIAL_CHAR "{+*?[(|}])^$."
 
 # define FT_REGEX_ESCAPED_CHAR '\\'
 
@@ -50,24 +50,27 @@
 ** 0x0000000100003E00
 */
 
-# define RSW64 {[RSL] = 0x3FFull << 48, [RSH] = 0x07FFFFFE87FFFFFEull}
+# define RSW64 {[0] = 0x3FFull << 48, [1] = 0x07FFFFFE87FFFFFEull}
 # define RSW ((t_regex_set){.bol = RSW64})
 
-# define NRSW64 {[RSL] = ~(0x3FFull << 48), [RSH] = ~0x07FFFFFE87FFFFFEull}
+# define NRSW64 {[0] = ~(0x3FFull << 48), [1] = ~0x07FFFFFE87FFFFFEull}
 # define NRSW ((t_regex_set){.bol = NRSW64})
 
-# define RSD64 {[RSL] = 0x3FFull << 48, [RSH] = 0ull}
+# define RSD64 {[0] = 0x3FFull << 48, [1] = 0ull}
 # define RSD ((t_regex_set){.bol = RSD64})
 
-# define NRSD64 {[RSL] = ~(0x3FFull << 48), [RSH] = ~0ull}
+# define NRSD64 {[0] = ~(0x3FFull << 48), [1] = ~0ull}
 # define NRSD ((t_regex_set){.bol = NRSD64})
 
-# define RSS64 {[RSL] = 0x0000000100003E00ull, [RSH] = 0ull}
+# define RSS64 {[0] = 0x0000000100003E00ull, [1] = 0ull}
 # define RSS ((t_regex_set){.bol = RSS64})
 
-# define NRSS64 {[RSL] = ~0x0000000100003E00ull, [RSH] = ~0ull}
+# define NRSS64 {[0] = ~0x0000000100003E00ull, [1] = ~0ull}
 # define NRSS ((t_regex_set){.bol = NRSS64})
 
 # define SET_SPE ((t_regex_set[6]){RSS, NRSS, RSD, NRSD, RSW, NRSW})
+
+# define DS64 {[0] = -1ull ^ (1ull << '\n'), [1] = -1ull}
+# define DS ((t_regex_set){.bol = DS64})
 
 #endif

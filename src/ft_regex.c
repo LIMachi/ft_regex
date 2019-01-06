@@ -25,3 +25,15 @@ t_regex		ft_regex_compile(char *expression,
 		*error = reg.error;
 	return (reg);
 }
+
+int			ft_regex_find(char *str,
+						t_regex *regex,
+						t_regex_match *matchs,
+						int nb_matchs)
+{
+	(void)str;
+	(void)regex;
+	(void)matchs;
+	(void)nb_matchs;
+	return (re_ok);
+}
